@@ -8,6 +8,7 @@ import {
 import { Datasource, DatasourceTypes } from "@/models/datasource"
 import { ChevronRight, Settings } from "lucide-react"
 import { useState } from "react"
+import { generatePath, NavLink } from "react-router"
 import { DatasourcesSidebarGroup } from "./item/datasources-item"
 import { ProjectsSidebarGroup } from "./item/projects-item"
 import { NavUser } from "./nav-user"
@@ -46,7 +47,7 @@ export function AppSidebar() {
             url: "#",
             icon: Settings,
             isActive: false,
-            items: [{ name: "Workers", url: "#" }],
+            items: [{ name: "Workers", url: "workers" }],
         },
     ]
 
@@ -81,9 +82,9 @@ export function AppSidebar() {
                                             {item.items?.map((subItem) => (
                                                 <SidebarMenuSubItem key={subItem.name}>
                                                     <SidebarMenuSubButton asChild>
-                                                        <a href="#">
+                                                        <NavLink to={generatePath(subItem.url)} >
                                                             <span>{subItem.name}</span>
-                                                        </a>
+                                                        </NavLink>
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
                                             ))}

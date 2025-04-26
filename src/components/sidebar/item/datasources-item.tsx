@@ -21,7 +21,6 @@ export function DatasourcesSidebarGroup({ datasources, setDatasources }: Datasou
     return (
         <ExtendableSidebarGroup name="Datasources" pathTemplate="datasources/:id" subItems={datasources.map(datasource => ({ id: datasource.id, name: datasource.name, icon: datasourceTypeIcons[datasource.type], onClick: () => null }))} addButton={
             <AddDatasourceForm
-                availableDatasources={datasources}
                 triggerElement={
                     <SidebarGroupAction title="Add Datasource">
                         <Plus /> <span className="sr-only">Add Datasource</span>
