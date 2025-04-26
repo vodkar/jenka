@@ -6,10 +6,10 @@ export default function Layout() {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main>
-                <SidebarTrigger />
+            <SidebarTrigger />
+            <main className="flex flex-col h-screen w-full p-2">
                 <SidebarInset>
-                    <Outlet />;
+                    <Outlet />
                 </SidebarInset>
             </main>
         </SidebarProvider>

@@ -51,9 +51,9 @@ export function AppSidebar() {
     ]
 
     const user = {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
+        name: "Penis Testov",
+        email: "eshkerex@lol.com",
+        avatar: "/avatars/rzhomba.jpg",
     }
 
     return (

@@ -19,7 +19,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Datasource } from "@/models/datasource";
 import { Project } from "@/models/project";
 import { addProjectSchema } from "@/schema/zod/add-project";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Textarea } from "../ui/textarea";
 
@@ -128,9 +127,7 @@ export function AddProjectForm({ availableDatasources, triggerElement, projects,
                             )}
                         />
                         <DialogFooter>
-                            <DialogClose asChild>
-                                <Button type="submit">Create</Button>
-                            </DialogClose>
+                            <Button type="submit">Create</Button>
                         </DialogFooter>
                     </form>
                 </Form>

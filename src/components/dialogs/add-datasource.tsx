@@ -23,13 +23,12 @@ import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from 
 import { Textarea } from "../ui/textarea";
 
 interface AddDatasourceFormProps {
-    availableDatasources: Datasource[];
     triggerElement: React.ReactNode;
     datasources: Datasource[];
     setDatasources: (datasources: Datasource[]) => void;
 }
 
-export function AddDatasourceForm({ availableDatasources, triggerElement, datasources, setDatasources }: AddDatasourceFormProps) {
+export function AddDatasourceForm({ triggerElement, datasources, setDatasources }: AddDatasourceFormProps) {
     const form = useForm<z.infer<typeof addDatasourceSchema>>({
         resolver: zodResolver(addDatasourceSchema),
         defaultValues: {
