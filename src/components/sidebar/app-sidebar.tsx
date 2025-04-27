@@ -5,37 +5,14 @@ import {
     SidebarMenuSubButton, SidebarMenuSubItem,
     SidebarRail
 } from "@/components/ui/sidebar"
-import { Datasource, DatasourceTypes } from "@/models/datasource"
+import { datasources } from "@/mockData/datasources"
+import { Datasource } from "@/models/datasource"
 import { ChevronRight, Settings } from "lucide-react"
 import { useState } from "react"
 import { generatePath, NavLink } from "react-router"
-import { DatasourcesSidebarGroup } from "./item/datasources-item"
 import { ProjectsSidebarGroup } from "./item/projects-item"
 import { NavUser } from "./nav-user"
 
-
-const datasources: Datasource[] = [
-    {
-        id: 1,
-        name: "Datasource 1",
-        type: DatasourceTypes.GITHUB,
-        description: "Github Datasource",
-        createdAt: "2023-01-01",
-        updatedAt: "2023-01-01",
-        createdBy: "me",
-        updatedBy: "me",
-    },
-    {
-        id: 2,
-        name: "Datasource 2",
-        type: DatasourceTypes.S3,
-        description: "S3 Datasource",
-        createdAt: "2023-01-01",
-        updatedAt: "2023-01-01",
-        createdBy: "me",
-        updatedBy: "me",
-    },
-]
 
 export function AppSidebar() {
 
@@ -47,7 +24,7 @@ export function AppSidebar() {
             url: "#",
             icon: Settings,
             isActive: false,
-            items: [{ name: "Workers", url: "workers" }],
+            items: [{ name: "Workers", url: "workers" }, { name: "Datasources", url: "datasources" }],
         },
     ]
 
@@ -61,7 +38,6 @@ export function AppSidebar() {
         <Sidebar>
             <SidebarContent>
                 <ProjectsSidebarGroup datasources={datasources} />
-                <DatasourcesSidebarGroup datasources={datasourcesState} setDatasources={setDatasources} />
                 <SidebarGroup className="mt-auto" >
                     <SidebarMenu>
                         {items.map((item) => (

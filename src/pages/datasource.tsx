@@ -1,33 +1,43 @@
 import { MainHeader } from "@/components/sidebar/header";
-import { Datasource, DatasourceTypes } from "@/models/datasource";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { datasources } from "@/mockData/datasources";
+import { CirclePlus, Cloud, FolderGit, HardDrive } from "lucide-react";
 import type { Route } from "./+types/datasource";
 
-const datasource: Datasource = {
-    id: 1,
-    name: "Datasource 1",
-    description: "This is a datasource",
-    type: DatasourceTypes.GITHUB,
-    createdAt: "2023-10-01T00:00:00.000Z",
-    updatedAt: "2023-10-01T00:00:00.000Z",
-    createdBy: "user1",
-    updatedBy: "user1",
+
+export const datasourceTypeIcons = {
+    LOCAL: <HardDrive />,
+    GITHUB: <FolderGit />,
+    S3: <Cloud />,
 }
 
 export default function DatasourcesPage({
     loaderData,
 }: Route.ComponentProps) {
-
     return (
-        <div className="flex flex-col space-y-4 px-4">
-            <MainHeader headerText="Datasources" />
-            <div className="flex flex-col space-y-2">
-                <h2 className="text-xl font-bold">{datasource.name}</h2>
-                <p>{datasource.description}</p>
-                <p>Type: {datasource.type}</p>
-                <p>Created at: {new Date(datasource.createdAt).toLocaleString()}</p>
-                <p>Updated at: {new Date(datasource.updatedAt).toLocaleString()}</p>
-                <p>Created by: {datasource.createdBy}</p>
-                <p>Updated by: {datasource.updatedBy}</p>
+        <div>
+            <MainHeader headerText="Datasources" additionalElements={[
+                <Button size="sm" variant="outline">
+                    <CirclePlus />
+                    Add Datasource
+                </Button>
+            ]} />
+            <div className="*:data-[slot=card]:shadow-xs px-4 gap-4 grid grid-cols-3 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card">
+                {datasources.map((datasource) => (
+                    <Card className="@container/card">
+                        <CardHeader className="relative">
+                            <CardDescription>
+                                <div className="flex items-center gap-2">
+                                    {datasourceTypeIcons[datasource.type]} {datasource.name}
+                                </div>
+                            </CardDescription>
+                            <CardTitle>
+                                {datasource.description}
+                            </CardTitle>
+                        </CardHeader>
+                    </Card>
+                ))}
             </div>
         </div>
     )
