@@ -1,5 +1,9 @@
 
+import { MainHeader } from "@/components/sidebar/header";
+import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Worker, WorkerStatuses, WorkerTypes } from "@/models/worker";
+import { CirclePlus, Cloud, Moon, Server, Shovel, Skull, Unplug } from "lucide-react";
 import type { Route } from "./+types/workers";
 
 const workers: Worker[] = [
@@ -27,25 +31,93 @@ const workers: Worker[] = [
         url: 'https://example.com',
         token: 'token123',
     },
+    {
+        id: 3,
+        name: 'Worker 3',
+        type: WorkerTypes.LOCAL,
+        status: WorkerStatuses.ERROR,
+        createdAt: '2023-01-01T00:00:00Z',
+        updatedAt: '2023-01-01T00:00:00Z',
+        createdBy: 'user3',
+        updatedBy: 'user3',
+        containerId: 'container2',
+        containerName: 'container2',
+    },
+    {
+        id: 4,
+        name: 'Worker 4',
+        type: WorkerTypes.REMOTE,
+        status: WorkerStatuses.OFFLINE,
+        createdAt: '2023-01-01T00:00:00Z',
+        updatedAt: '2023-01-01T00:00:00Z',
+        createdBy: 'user4',
+        updatedBy: 'user4',
+        url: 'https://example.com/worker4',
+        token: 'token456',
+    }
 ];
 
-export function WorkersPage({
+const WORKER_STATUSES_UI = new Map([
+    [WorkerStatuses.RUNNING, {
+        icon: <Shovel />,
+        text: 'Running',
+        color: 'green',
+    }],
+    [
+        WorkerStatuses.ERROR, {
+            icon: <Skull />,
+            text: 'Error',
+            color: 'red',
+        }],
+    [
+        WorkerStatuses.IDLE, {
+            icon: <Moon />,
+            text: 'Idle',
+            color: 'yellow',
+        }],
+    [
+        WorkerStatuses.OFFLINE, {
+            icon: <Unplug />,
+            text: 'Offline',
+            color: 'gray',
+        }],
+]
+)
+
+const WORKER_TYPES_UI = new Map([
+    [WorkerTypes.LOCAL, <Server size={16} />],
+    [WorkerTypes.REMOTE, <Cloud size={16} />],
+]
+)
+
+export default function WorkersPage({
     loaderData,
 }: Route.ComponentProps) {
     return (
-        <div className="flex flex-col space-y-4">
-            <h1 className="text-2xl font-bold">Workers</h1>
-            <div className="flex flex-col space-y-2">
+        <div>
+            <MainHeader headerText="Workers" additionalElements={[
+                <Button size="sm" variant="outline">
+                    <CirclePlus />
+                    Add Worker
+                </Button>
+            ]} />
+            <div className="*:data-[slot=card]:shadow-xs px-4 gap-4 grid grid-cols-3 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card">
                 {workers.map((worker) => (
-                    <div key={worker.id} className="p-4 border rounded-md">
-                        <h2 className="text-xl font-bold">{worker.name}</h2>
-                        <p>Type: {worker.type}</p>
-                        <p>Status: {worker.status}</p>
-                        <p>Created at: {new Date(worker.createdAt).toLocaleString()}</p>
-                        <p>Updated at: {new Date(worker.updatedAt).toLocaleString()}</p>
-                        <p>Created by: {worker.createdBy}</p>
-                        <p>Updated by: {worker.updatedBy}</p>
-                    </div>
+                    <Card className="@container/card">
+                        <CardHeader className="relative">
+                            <CardDescription>
+                                <div className="flex items-center gap-2">
+                                    {WORKER_TYPES_UI.get(worker.type)} {worker.name}
+                                </div>
+                            </CardDescription>
+                            <CardTitle className="flex items-center gap-2">
+                                {WORKER_STATUSES_UI.get(worker.status)?.icon}
+                                <span className={`text-${WORKER_STATUSES_UI.get(worker.status)?.color}-500`}>
+                                    {WORKER_STATUSES_UI.get(worker.status)?.text}
+                                </span>
+                            </CardTitle>
+                        </CardHeader>
+                    </Card>
                 ))}
             </div>
         </div>

@@ -1,5 +1,6 @@
 import { LogViewerDialog } from "@/components/dialogs/log-viewer";
 import { RunTaskForm } from "@/components/dialogs/run-task";
+import { MainHeader } from "@/components/sidebar/header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -201,88 +202,90 @@ export default function ProjectPage({
 }: Route.ComponentProps) {
     return (
         <div>
-            {data.map((task) => (
-                <Collapsible className="group/collapsible">
-                    <Card id={task.id.toString()} className="mb-4" key={task.id}>
-                        <CollapsibleTrigger asChild>
-                            <div>
-                                <CardHeader>
-                                    <div className="flex items-center gap-4">
-                                        <ChevronRight className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                                        <CardTitle>
-                                            {task.name}
-                                        </CardTitle>
-                                        <RunTaskForm triggerElement={
-                                            <Button variant="outline">
-                                                <Play />
-                                            </Button>
-                                        } task={task} />
-                                    </div>
-                                </CardHeader>
-
-                                <CardContent className="space-y-4">
-                                    <div className="grid grid-cols-5 items-center gap-4">
-                                        {task.runHistory
-                                            .sort((a, b) => b.runNumber - a.runNumber)
-                                            .slice(0, 5)
-                                            .map((run) => (
-                                                <div
-                                                    key={run.id}
-                                                    className="group-data-[state=open]/collapsible:hidden flex flex-col items-center"
-                                                >
-                                                    <p># {run.runNumber}</p>
-                                                    <Progress
-                                                        value={run.progress}
-                                                        indicatorClassName={
-                                                            run.status === TaskRunStatus.SUCCESS
-                                                                ? "bg-green-300"
-                                                                : run.status === TaskRunStatus.FAILED
-                                                                    ? "bg-red-300"
-                                                                    : "bg-yellow-300"
-                                                        }
-                                                    />
-                                                </div>
-                                            ))}
-                                    </div>
-                                </CardContent>
-
-                            </div>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                            <ScrollArea className="h-[300px] w-full px-6">
+            <MainHeader headerText="Projects" />
+            <div className="px-4">
+                {data.map((task) => (
+                    <Collapsible id={task.id.toString()} key={task.id} className="group/collapsible">
+                        <Card className="mb-4" key={task.id}>
+                            <CollapsibleTrigger asChild>
                                 <div>
-                                    {task.runHistory.map((run) => (
-                                        <div>
-                                            <div className="flex flex-wrap my-2 items-center space-x-2 justify-between" key={run.id}>
-                                                <div key={run.id} className="flex items-center space-x-2">
-                                                    <StatusIndicator status={run.status} />
-                                                    <p>Run #{run.runNumber}</p>
-                                                </div>
-                                                <LogViewerDialog triggerElement={
-                                                    <Button variant="ghost">
-                                                        <FileText />
-                                                    </Button>
-                                                } taskRun={run} />
-                                            </div>
-                                            <Progress
-                                                value={run.progress}
-                                                indicatorClassName={
-                                                    run.status === TaskRunStatus.SUCCESS
-                                                        ? "bg-green-300"
-                                                        : run.status === TaskRunStatus.FAILED
-                                                            ? "bg-red-300"
-                                                            : "bg-yellow-300"
-                                                }
-                                            />
+                                    <CardHeader>
+                                        <div className="flex items-center gap-4">
+                                            <ChevronRight className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                            <CardTitle>
+                                                {task.name}
+                                            </CardTitle>
+                                            <RunTaskForm triggerElement={
+                                                <Button variant="outline">
+                                                    <Play />
+                                                </Button>
+                                            } task={task} />
                                         </div>
-                                    ))}
+                                    </CardHeader>
+
+                                    <CardContent className="space-y-4">
+                                        <div className="grid grid-cols-5 items-center gap-4">
+                                            {task.runHistory
+                                                .sort((a, b) => b.runNumber - a.runNumber)
+                                                .slice(0, 5)
+                                                .map((run) => (
+                                                    <div
+                                                        key={run.id}
+                                                        className="group-data-[state=open]/collapsible:hidden flex flex-col items-center"
+                                                    >
+                                                        <p># {run.runNumber}</p>
+                                                        <Progress
+                                                            value={run.progress}
+                                                            indicatorClassName={
+                                                                run.status === TaskRunStatus.SUCCESS
+                                                                    ? "bg-green-300"
+                                                                    : run.status === TaskRunStatus.FAILED
+                                                                        ? "bg-red-300"
+                                                                        : "bg-yellow-300"
+                                                            }
+                                                        />
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    </CardContent>
+
                                 </div>
-                            </ScrollArea>
-                        </CollapsibleContent>
-                    </Card>
-                </Collapsible>
-            )
-            )}
-        </div>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                                <ScrollArea className="h-[300px] w-full px-6">
+                                    <div>
+                                        {task.runHistory.map((run) => (
+                                            <div>
+                                                <div className="flex flex-wrap my-2 items-center space-x-2 justify-between" key={run.id}>
+                                                    <div key={run.id} className="flex items-center space-x-2">
+                                                        <StatusIndicator status={run.status} />
+                                                        <p>Run #{run.runNumber}</p>
+                                                    </div>
+                                                    <LogViewerDialog triggerElement={
+                                                        <Button variant="ghost">
+                                                            <FileText />
+                                                        </Button>
+                                                    } taskRun={run} />
+                                                </div>
+                                                <Progress
+                                                    value={run.progress}
+                                                    indicatorClassName={
+                                                        run.status === TaskRunStatus.SUCCESS
+                                                            ? "bg-green-300"
+                                                            : run.status === TaskRunStatus.FAILED
+                                                                ? "bg-red-300"
+                                                                : "bg-yellow-300"
+                                                    }
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
+                            </CollapsibleContent>
+                        </Card>
+                    </Collapsible>
+                )
+                )}
+            </div></div>
     )
 }

@@ -1,12 +1,14 @@
 import { Route, Routes } from "react-router";
-import Project from "./pages/project";
+import DatasourcesPage from "./pages/datasource";
 import Root from "./pages/root";
+import { WorkersPage } from "./pages/workers";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Root />} />
-      <Route path="/projects/:projectId" element={<Project />} />
+      <Route index element={<Root />} />
+      <Route path="datasources" element={<DatasourcesPage />} />
+      <Route path="workers" element={<WorkersPage />} />
     </Routes>
   );
 }

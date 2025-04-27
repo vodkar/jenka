@@ -1,3 +1,4 @@
+import { MainHeader } from "@/components/sidebar/header";
 import { Datasource, DatasourceTypes } from "@/models/datasource";
 import type { Route } from "./+types/datasource";
 
@@ -17,8 +18,8 @@ export default function DatasourcesPage({
 }: Route.ComponentProps) {
 
     return (
-        <div className="flex flex-col space-y-4">
-            <h1 className="text-2xl font-bold">Datasources</h1>
+        <div className="flex flex-col space-y-4 px-4">
+            <MainHeader headerText="Datasources" />
             <div className="flex flex-col space-y-2">
                 <h2 className="text-xl font-bold">{datasource.name}</h2>
                 <p>{datasource.description}</p>
