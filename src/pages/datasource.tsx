@@ -1,8 +1,10 @@
+import { AddDatasourceForm } from "@/components/dialogs/add-datasource";
 import { MainHeader } from "@/components/sidebar/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { datasources } from "@/mockData/datasources";
 import { CirclePlus, Cloud, FolderGit, HardDrive } from "lucide-react";
+import { useState } from "react";
 import type { Route } from "./+types/datasource";
 
 
@@ -15,16 +17,20 @@ export const datasourceTypeIcons = {
 export default function DatasourcesPage({
     loaderData,
 }: Route.ComponentProps) {
+    const [visibleDatasources, setDatasources] = useState(datasources);
+
     return (
         <div>
             <MainHeader headerText="Datasources" additionalElements={[
-                <Button size="sm" variant="outline">
-                    <CirclePlus />
-                    Add Datasource
-                </Button>
+                <AddDatasourceForm triggerElement={
+                    <Button size="sm" variant="outline">
+                        <CirclePlus />
+                        Add Datasource
+                    </Button>
+                } datasources={visibleDatasources} setDatasources={setDatasources} />
             ]} />
             <div className="*:data-[slot=card]:shadow-xs px-4 gap-4 grid grid-cols-3 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card">
-                {datasources.map((datasource) => (
+                {visibleDatasources.map((datasource) => (
                     <Card className="@container/card">
                         <CardHeader className="relative">
                             <CardDescription>

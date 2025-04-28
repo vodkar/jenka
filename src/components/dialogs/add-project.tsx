@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Datasource } from "@/models/datasource";
 import { Project } from "@/models/project";
 import { addProjectSchema } from "@/schema/zod/add-project";
-import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Textarea } from "../ui/textarea";
 
 interface AddProjectFormProps {
@@ -41,7 +41,7 @@ export function AddProjectForm({ availableDatasources, triggerElement, projects,
 
     function onSubmit(values: z.infer<typeof addProjectSchema>) {
         const project = {
-            id: 3,
+            id: Math.floor(Math.random() * 1000),
             name: values.name,
             description: values.description,
             createdAt: new Date().toISOString(),
@@ -49,8 +49,9 @@ export function AddProjectForm({ availableDatasources, triggerElement, projects,
             createdBy: "me",
             updatedBy: "me",
             datasourceId: parseInt(values.datasourceId),
-        }
-        setProjects([...projects, project])
+        };
+        setProjects([...projects, project]);
+        form.reset();
     }
 
     return (
@@ -127,7 +128,9 @@ export function AddProjectForm({ availableDatasources, triggerElement, projects,
                             )}
                         />
                         <DialogFooter>
-                            <Button type="submit">Create</Button>
+                            <DialogClose asChild>
+                                <Button type="submit">Create</Button>
+                            </DialogClose>
                         </DialogFooter>
                     </form>
                 </Form>

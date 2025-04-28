@@ -2,7 +2,7 @@ import { SidebarGroupAction } from "@/components/ui/sidebar"
 import { Datasource } from "@/models/datasource"
 import { Project } from "@/models/project"
 import { Plus } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { AddProjectForm } from "../../dialogs/add-project"
 import { ExtendableSidebarGroup } from "./collapsible-sidebar-item"
 
@@ -33,12 +33,19 @@ export interface ProjectsSidebarMenuItemProps {
     datasources: Datasource[]
 }
 
-
 export function ProjectsSidebarGroup({ datasources }: ProjectsSidebarMenuItemProps) {
     const [projects, setProjects] = useState<Project[]>(initialProjects)
 
+    useEffect(() => {
+        console.log("Projects updated in SidebarGroup:", projects)
+    }
+        , [projects])
+
     return (
-        <ExtendableSidebarGroup name="Project Tasks" pathTemplate="projects/:id" subItems={projects.map(project => ({ id: project.id, name: project.name, onClick: () => null }))}
+        <ExtendableSidebarGroup
+            name="Project Tasks"
+            pathTemplate="projects/:id"
+            projects={projects}
             addButton={
                 <AddProjectForm
                     availableDatasources={datasources}
@@ -50,6 +57,7 @@ export function ProjectsSidebarGroup({ datasources }: ProjectsSidebarMenuItemPro
                     projects={projects}
                     setProjects={setProjects}
                 />
-            } />
+            }
+        />
     )
 }

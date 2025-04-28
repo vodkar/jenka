@@ -1,39 +1,45 @@
+import { SearchProjectsForm } from "@/components/search-form"
+import { Separator } from "@/components/ui/separator"
 import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton, SidebarMenuItem
 } from "@/components/ui/sidebar"
+import { Project } from "@/models/project"
+import { useEffect, useState } from "react"
 import { generatePath, NavLink } from "react-router"
 
-export interface SidebarMenuSubItemProps {
-    id: number,
-    name: string
-    icon?: React.ReactNode
-    onClick: () => void
-}
 
 export interface CollapsibleSidebarItemProps {
     name: string
-    subItems: SidebarMenuSubItemProps[]
+    projects: Project[]
     addButton: React.ReactNode
-    pathTemplate: string
+    pathTemplate: string,
 }
 
 
-export function ExtendableSidebarGroup({ name, subItems, addButton, pathTemplate }: CollapsibleSidebarItemProps) {
+export function ExtendableSidebarGroup({ name, projects, addButton, pathTemplate }: CollapsibleSidebarItemProps) {
+    const [visibleProjects, setVisibleProjects] = useState<Project[]>(projects)
+
+    useEffect(() => {
+        setVisibleProjects(projects);
+        console.log("Projects updated:", projects);
+    }, [projects])
+
     return (
         <SidebarGroup>
-            <SidebarGroupLabel className="justify-between">
+            <SidebarGroupLabel className="justify-between h-10">
                 {name}
                 {addButton}
             </SidebarGroupLabel>
+            <Separator className="mb-2" />
+            <SearchProjectsForm projects={projects} setFilteredProjects={setVisibleProjects} className="mb-2" />
             <SidebarMenu>
-                {subItems.map((item) => (
+                {visibleProjects.map((item) => (
                     <SidebarMenuItem key={item.id} >
                         <SidebarMenuButton tooltip={item.name} className="cursor-pointer">
                             <NavLink to={generatePath(pathTemplate, { id: item.id })} className="flex items-center gap-2">
-                                {item.icon}
                                 <span>{item.name}</span>
                             </NavLink>
                         </SidebarMenuButton>

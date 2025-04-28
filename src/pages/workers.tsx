@@ -96,14 +96,14 @@ export default function WorkersPage({
     return (
         <div>
             <MainHeader headerText="Workers" additionalElements={[
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" onClick={() => { alert("МТС ЛУЧШАЯ КОМПАНИЯ В МИРК!!11") }}>
                     <CirclePlus />
                     Add Worker
                 </Button>
             ]} />
             <div className="*:data-[slot=card]:shadow-xs px-4 gap-4 grid grid-cols-3 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card">
                 {workers.map((worker) => (
-                    <Card className="@container/card">
+                    <Card id={worker.id.toString()} className="@container/card">
                         <CardHeader className="relative">
                             <CardDescription>
                                 <div className="flex items-center gap-2">

@@ -48,8 +48,9 @@ export function AddDatasourceForm({ triggerElement, datasources, setDatasources 
             updatedAt: new Date().toISOString(),
             createdBy: "me",
             updatedBy: "me",
-        }
-        setDatasources([...datasources, datasource])
+        };
+        setDatasources([...datasources, datasource]);
+        form.reset();
     }
 
     return (
