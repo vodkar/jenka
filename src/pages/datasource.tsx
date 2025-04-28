@@ -14,9 +14,7 @@ export const datasourceTypeIcons = {
     S3: <Cloud />,
 }
 
-export default function DatasourcesPage({
-    loaderData,
-}: Route.ComponentProps) {
+export default function DatasourcesPage({ }: Route.ComponentProps) {
     const [visibleDatasources, setDatasources] = useState(datasources);
 
     return (

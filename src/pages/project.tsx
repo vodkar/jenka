@@ -197,9 +197,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 
 
-export default function ProjectPage({
-    loaderData,
-}: Route.ComponentProps) {
+export default function ProjectPage({ }: Route.ComponentProps) {
     return (
         <div>
             <MainHeader headerText="Projects" />

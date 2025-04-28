@@ -90,9 +90,7 @@ const WORKER_TYPES_UI = new Map([
 ]
 )
 
-export default function WorkersPage({
-    loaderData,
-}: Route.ComponentProps) {
+export default function WorkersPage({ }: Route.ComponentProps) {
     return (
         <div>
             <MainHeader headerText="Workers" additionalElements={[

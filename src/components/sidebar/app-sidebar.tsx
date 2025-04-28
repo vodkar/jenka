@@ -6,17 +6,13 @@ import {
     SidebarRail
 } from "@/components/ui/sidebar"
 import { datasources } from "@/mockData/datasources"
-import { Datasource } from "@/models/datasource"
 import { ChevronRight, Settings } from "lucide-react"
-import { useState } from "react"
 import { generatePath, NavLink } from "react-router"
 import { ProjectsSidebarGroup } from "./item/projects-item"
 import { NavUser } from "./nav-user"
 
 
 export function AppSidebar() {
-
-    const [datasourcesState, setDatasources] = useState<Datasource[]>(datasources)
 
     const items = [
         {
