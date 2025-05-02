@@ -1,4 +1,4 @@
-export default function Root() {
+export default function RootPage() {
     return (
         <div className="flex h-screen w-screen flex-col">
             <h1 className="text-2xl font-bold">Root</h1>

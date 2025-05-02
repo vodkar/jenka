@@ -3,7 +3,7 @@ import {
     Meta,
     Outlet,
     Scripts,
-    ScrollRestoration,
+    ScrollRestoration
 } from "react-router";
 
 export function Layout({
@@ -19,7 +19,7 @@ export function Layout({
                     name="viewport"
                     content="width=device-width, initial-scale=1.0"
                 />
-                <title>My App</title>
+                <title>Jenka 👷</title>
                 <Meta />
                 <Links />
             </head>
