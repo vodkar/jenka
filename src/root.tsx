@@ -32,6 +32,6 @@ export function Layout({
     );
 }
 
-export default function Root() {
+export default function App() {
     return <Outlet />;
 }
