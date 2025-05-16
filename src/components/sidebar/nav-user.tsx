@@ -26,6 +26,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
+import { ModeToggle } from "../mode-toogle"
 
 export function NavUser({
     user,
@@ -74,6 +75,7 @@ export function NavUser({
                                     <span className="truncate font-semibold">{user.name}</span>
                                     <span className="truncate text-xs">{user.email}</span>
                                 </div>
+                                <ModeToggle />
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />

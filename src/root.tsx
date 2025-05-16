@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/components/theme-provider";
 import {
     Links,
     Meta,
@@ -24,7 +25,9 @@ export function Layout({
                 <Links />
             </head>
             <body>
-                {children}
+                <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                    {children}
+                </ThemeProvider>
                 <ScrollRestoration />
                 <Scripts />
             </body>
