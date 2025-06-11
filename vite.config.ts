@@ -4,11 +4,10 @@ import path from "path";
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-
   plugins: [reactRouter(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./frontend"),
     },
   },
   build: { outDir: 'dist' },

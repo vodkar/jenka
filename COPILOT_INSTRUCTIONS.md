@@ -50,7 +50,7 @@ You're working on a fullstack web application using:
 - Use Tailwind CSS for all layout and styling.
 - Use `shadcn/ui` components (like Button, Card, Input, AlertDialog).
 - `shadcn/ui` uses `radix-ui` as a base for components
-- Components live in `client/src/components/`.
+- Components live in `client/frontend/components/`.
 - API calls go through `fetch('/api/...')`.
 - Create reusable, atomic components.
 - Add types for props and API responses.
