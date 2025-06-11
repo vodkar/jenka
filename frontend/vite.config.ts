@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [reactRouter(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./frontend"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   build: { outDir: 'dist' },

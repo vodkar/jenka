@@ -26,12 +26,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "./frontend/*"
+        "src/*"
       ]
     }
   },
   "include": [
-    "frontend",
+    "src",
     ".react-router/types/**/*"
   ]
 }
