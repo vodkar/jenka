@@ -25,3 +25,5 @@ dist-ssr
 
 .react-router/
 build/
+*.db
+*.db-journal

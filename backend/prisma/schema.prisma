@@ -10,3 +10,208 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+enum DatasourceType {
+  GITHUB
+  LOCAL
+  S3
+}
+
+enum WorkerType {
+  LOCAL
+  REMOTE
+}
+
+enum WorkerStatus {
+  RUNNING
+  IDLE
+  ERROR
+  OFFLINE
+}
+
+enum TaskRunStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+enum TaskParameterType {
+  STRING
+  BOOL
+  INT
+  FLOAT
+  ARRAY
+  MAP
+  ENUM
+}
+
+model User {
+  id              Int     @id @default(autoincrement())
+  email           String  @unique
+  name            String?
+  hashed_password String
+
+  // Relationships
+  createdDatasources Datasource[] @relation("DatasourceCreatedBy")
+  updatedDatasources Datasource[] @relation("DatasourceUpdatedBy")
+  createdProjects    Project[]    @relation("ProjectCreatedBy")
+  updatedProjects    Project[]    @relation("ProjectUpdatedBy")
+  createdWorkers     Worker[]     @relation("WorkerCreatedBy")
+  updatedWorkers     Worker[]     @relation("WorkerUpdatedBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tokens JWTToken[] @relation("UserTokens")
+}
+
+model S3Credentials {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdBy   Int
+  updatedBy   Int
+  accessKey   String
+  secretKey   String
+  endpointUrl String?
+  region      String?
+  datasources Datasource[] @relation("S3Credentials")
+}
+
+model GithubCredentials {
+  id            Int          @id @default(autoincrement())
+  name          String
+  description   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  createdBy     Int
+  updatedBy     Int
+  privateSSHKey String?
+  datasources   Datasource[] @relation("GithubCredentials")
+}
+
+model Datasource {
+  id          Int            @id @default(autoincrement())
+  name        String
+  type        DatasourceType
+  description String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  createdBy   Int
+  updatedBy   Int
+  path        String
+
+  // Github Only
+  repoUrl             String?
+  githubCredentialsId Int?
+  githubCredentials   GithubCredentials? @relation("GithubCredentials", fields: [githubCredentialsId], references: [id])
+
+  // S3 Only
+  s3CredentialsId Int?
+  s3Credentials   S3Credentials? @relation("S3Credentials", fields: [s3CredentialsId], references: [id])
+
+  // Relationships
+  creator  User      @relation("DatasourceCreatedBy", fields: [createdBy], references: [id])
+  updater  User      @relation("DatasourceUpdatedBy", fields: [updatedBy], references: [id])
+  projects Project[]
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String
+  datasourceId Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    Int
+  updatedBy    Int
+
+  // Relationships
+  datasource Datasource @relation(fields: [datasourceId], references: [id])
+  creator    User       @relation("ProjectCreatedBy", fields: [createdBy], references: [id])
+  updater    User       @relation("ProjectUpdatedBy", fields: [createdBy], references: [id])
+  tasks      Task[]
+}
+
+model Worker {
+  id        Int          @id @default(autoincrement())
+  name      String
+  type      WorkerType
+  status    WorkerStatus
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  createdBy Int
+  updatedBy Int
+
+  // Local worker specific fields
+  containerId   String?
+  containerName String?
+
+  // Remote worker specific fields
+  url   String?
+  token String?
+
+  // Relationships
+  creator  User      @relation("WorkerCreatedBy", fields: [createdBy], references: [id])
+  updater  User      @relation("WorkerUpdatedBy", fields: [createdBy], references: [id])
+  taskRuns TaskRun[]
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  name      String
+  projectId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  project    Project         @relation(fields: [projectId], references: [id])
+  parameters TaskParameter[]
+  runs       TaskRun[]
+}
+
+model TaskParameter {
+  id           Int               @id @default(autoincrement())
+  taskId       Int
+  name         String
+  type         TaskParameterType
+  defaultValue String?
+  isRequired   Boolean           @default(false)
+  enumValues   String? // JSON string for enum values
+
+  // Relationships
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model TaskRun {
+  id         Int           @id @default(autoincrement())
+  runNumber  Int
+  taskId     Int
+  workerId   Int?
+  status     TaskRunStatus
+  output     String?
+  hasOutput  Boolean       @default(false)
+  progress   Int           @default(0)
+  parameters String? // JSON string for parameters
+  startedAt  DateTime      @default(now())
+  finishedAt DateTime?
+
+  // Relationships
+  task   Task    @relation(fields: [taskId], references: [id])
+  worker Worker? @relation(fields: [workerId], references: [id])
+
+  @@unique([taskId, runNumber])
+}
+
+model JWTToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  // Relationships
+  user User @relation("UserTokens", fields: [userId], references: [id])
+}

@@ -35,14 +35,15 @@ Follow in the strict order:
 You're working on a fullstack web application using:
 
 - Frontend: Vite + React + TypeScript + Tailwind CSS + shadcn/ui
-- Backend: Express.js + TypeScript (running separately on port 3000)
+- Backend: fastify + TypeScript + Prisma ORM (running separately on port 3000)
+- PNPM IS USED as a package manager.
 
 ## Coding Guidelines ##
 
 - Use **TypeScript** for all files (`.ts` / `.tsx`).
 - Follow **React best practices** (function components, hooks, proper key usage).
 - Use **clean and minimal code**: no unnecessary wrappers, functions, or comments.
-- Use **async/await** for all asynchronous code.
+- Use **async/await** for all asynchronous code. Write async code everywhere, where it appropriate, especially on backend.
 - Backend and frontend are in separate folders: `/server` and `/client`.
 
 ## Frontend (Vite) ##
@@ -55,18 +56,18 @@ You're working on a fullstack web application using:
 - Create reusable, atomic components.
 - Add types for props and API responses.
 
-## Backend (Express) ##
+## Backend (fastify) ##
 
 - All code lives in `server/`.
 - Create routes under `server/routes/`.
-- Use `express.Router()` and export default router modules.
 - Enable CORS and JSON body parsing.
 - Use type-safe request/response (e.g., `Request<Params, ResBody, ReqBody>`).
 - Organize middleware and routes clearly.
+-
 
 ## Example Requests ##
 
-- Generate a simple Express route in TypeScript that returns a list of tasks.
+- Generate a simple fastify route in TypeScript that returns a list of tasks.
 - Create a React component called `<TaskList />` that fetches and displays tasks.
 - Build a shadcn `Button` that triggers a fetch call to start a task.
 - Style a layout using Tailwind grid and flex utilities.
