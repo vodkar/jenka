@@ -1,4 +1,5 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyInstance } from 'fastify';
+import { handleErrors } from './errorHandlers.js';
 import {
     createDatasourceHandler,
     createGithubCredentialsHandler,
@@ -73,24 +74,29 @@ await fastify.register(import('@fastify/swagger'), {
     }
 });
 
-// Register Swagger UI plugin
-await fastify.register(import('@fastify/swagger-ui'), {
-    routePrefix: '/api-docs',
-    uiConfig: {
-        docExpansion: 'full',
-        deepLinking: false
-    },
-    staticCSP: true,
-    transformStaticCSP: (header) => header,
-    transformSpecification: (swaggerObject, request, reply) => {
-        return swaggerObject;
-    },
-    transformSpecificationClone: true
-});
+
 
 await fastify.register(import('@fastify/jwt'), {
     secret: process.env.JWT_SECRET || 'default_secret'
 });
+
+export default async function (app: FastifyInstance) {
+    // Register Swagger UI plugin
+    await fastify.register(import('@fastify/swagger-ui'), {
+        routePrefix: '/api-docs',
+        uiConfig: {
+            docExpansion: 'full',
+            deepLinking: false
+        },
+        staticCSP: true,
+        transformStaticCSP: (header) => header,
+        transformSpecification: (swaggerObject, request, reply) => {
+            return swaggerObject;
+        },
+        transformSpecificationClone: true
+    });
+    app.setErrorHandler(handleErrors);
+};
 
 // Routes with automatic schema validation and documentation generation
 fastify.get('/', {

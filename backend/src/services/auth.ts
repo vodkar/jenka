@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { FastifyRequest } from 'fastify';
 import { User } from '../../generated/prisma';
+import { WrongCredentialsError } from '../errors';
 import { prisma } from '../prismaClient';
 import { AuthParamsRequest, AuthResponse } from '../schema/auth';
 import { HASH_ROUNDS } from './consts';
@@ -21,8 +22,6 @@ function generateAuthToken(user: User, request: FastifyRequest): string {
         id: user.id,
         email: user.email,
         name: user.name,
-    }, {
-        expiresIn: '1h',
     });
 }
 
@@ -32,11 +31,11 @@ export async function authenticateUser(login: AuthParamsRequest, request: Fastif
         where: { email: login.login },
     });
     if (!user) {
-        throw new Error('User not found');
+        throw new WrongCredentialsError('Invalid email or password');
     }
     const isPasswordValid = validatePassword(login.password, user);
     if (!isPasswordValid) {
-        throw new Error('Invalid password');
+        throw new WrongCredentialsError('Invalid email or password');
     }
     const token = generateAuthToken(user, request);
     return { token, user: { id: user.id, email: user.email, name: user.name } };
