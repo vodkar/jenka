@@ -26,9 +26,12 @@
     "typescript": "~5.7.3"
   },
   "dependencies": {
+    "@fastify/autoload": "^6.3.1",
     "@fastify/jwt": "^9.1.0",
+    "@fastify/sensible": "^6.0.3",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.3",
+    "@fastify/type-provider-typebox": "^5.1.0",
     "@prisma/client": "6.9.0",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^6.0.0",

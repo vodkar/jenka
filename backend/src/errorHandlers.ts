@@ -8,18 +8,12 @@ const handleWrongCredentialsError = (error: WrongCredentialsError, request: Fast
     });
 };
 
-const handleNotFoundError = (error: Error, request: FastifyRequest, reply: FastifyReply) => {
-    reply.status(404).send({
-        error: 'Not Found',
-        message: error.message
-    });
+const handleNotFoundError = (error: NotFoundError, request: FastifyRequest, reply: FastifyReply) => {
+    reply.notFound(error.message);
 };
 const handleInternalServerError = (error: Error, request: FastifyRequest, reply: FastifyReply) => {
     console.error('Internal Server Error:', error);
-    reply.status(500).send({
-        error: 'Internal Server Error',
-        message: 'An unexpected error occurred'
-    });
+    reply.internalServerError();
 };
 
 const handlerValidationError = (error: Error, request: FastifyRequest, reply: FastifyReply) => {
@@ -30,7 +24,7 @@ const handlerValidationError = (error: Error, request: FastifyRequest, reply: Fa
     });
 }
 
-const handleUnauthorizedError = (error: Error, request: FastifyRequest, reply: FastifyReply) => {
+const handleUnauthorizedError = (error: UnauthorizedError, request: FastifyRequest, reply: FastifyReply) => {
     console.error('Unauthorized Error:', error);
     reply.status(401).send({
         error: 'Unauthorized',
@@ -38,13 +32,6 @@ const handleUnauthorizedError = (error: Error, request: FastifyRequest, reply: F
     });
 }
 
-const handleForbiddenError = (error: Error, request: FastifyRequest, reply: FastifyReply) => {
-    console.error('Forbidden Error:', error);
-    reply.status(403).send({
-        error: 'Forbidden',
-        message: 'You do not have permission to access this resource'
-    });
-}
 
 export const handleErrors = (error: Error, request: FastifyRequest, reply: FastifyReply) => {
     if (error instanceof WrongCredentialsError) {
