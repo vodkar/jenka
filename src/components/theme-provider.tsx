@@ -1,3 +1,5 @@
+"use client"
+
 import { createContext, useContext, useEffect, useLayoutEffect, useState } from "react"
 
 type Theme = "dark" | "light" | "system"

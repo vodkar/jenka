@@ -5,7 +5,6 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { datasources } from "@/mockData/datasources";
 import { CirclePlus, Cloud, FolderGit, HardDrive } from "lucide-react";
 import { useState } from "react";
-import type { Route } from "./+types/datasource";
 
 
 export const datasourceTypeIcons = {
@@ -14,7 +13,7 @@ export const datasourceTypeIcons = {
     S3: <Cloud />,
 }
 
-export default function DatasourcesPage({ }: Route.ComponentProps) {
+export default function DatasourcesPage() {
     const [visibleDatasources, setDatasources] = useState(datasources);
 
     return (

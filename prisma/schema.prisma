@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Worker {
+  id        Int          @id @default(autoincrement())
+  name      String
+  type      WorkerType
+  status    WorkerStatus
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  createdBy String
+  updatedBy String
+
+  localWorker  LocalWorker?
+  remoteWorker RemoteWorker?
+
+  taskRuns TaskRun[]
+}
+
+model LocalWorker {
+  id            Int    @id @default(autoincrement())
+  containerId   String
+  containerName String
+  workerId      Int    @unique
+  worker        Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+}
+
+model RemoteWorker {
+  id       Int    @id @default(autoincrement())
+  url      String
+  token    String
+  workerId Int    @unique
+  worker   Worker @relation(fields: [workerId], references: [id], onDelete: Cascade)
+}
+
+model Datasource {
+  id          Int            @id @default(autoincrement())
+  name        String
+  type        DatasourceType
+  description String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  createdBy   String
+  updatedBy   String
+
+  projects Project[]
+}
+
+model Project {
+  id           Int        @id @default(autoincrement())
+  name         String
+  description  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  createdBy    String
+  updatedBy    String
+  datasourceId Int
+  datasource   Datasource @relation(fields: [datasourceId], references: [id])
+
+  tasks Task[]
+}
+
+model Task {
+  id        Int     @id @default(autoincrement())
+  name      String
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+
+  parameters TaskParameter[]
+  runHistory TaskRun[]
+}
+
+model TaskParameter {
+  id           Int               @id @default(autoincrement())
+  name         String
+  defaultValue String?
+  isRequired   Boolean
+  type         TaskParameterType
+  taskId       Int
+  task         Task              @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  enumParameter   TaskParameterEnum?
+  customParameter TaskParameterCustom?
+}
+
+model TaskParameterEnum {
+  id          Int           @id @default(autoincrement())
+  enumValues  String
+  parameterId Int           @unique
+  parameter   TaskParameter @relation(fields: [parameterId], references: [id], onDelete: Cascade)
+}
+
+model TaskParameterCustom {
+  id              Int           @id @default(autoincrement())
+  userDefinedType UserType
+  parameterId     Int           @unique
+  parameter       TaskParameter @relation(fields: [parameterId], references: [id], onDelete: Cascade)
+}
+
+model TaskRun {
+  id         Int           @id @default(autoincrement())
+  runNumber  Int
+  output     String?
+  status     TaskRunStatus
+  startedAt  DateTime
+  finishedAt DateTime?
+  taskfileId Int
+  hasOutput  Boolean       @default(false)
+  progress   Int           @default(0)
+  parameters String?
+  taskId     Int
+  task       Task          @relation(fields: [taskId], references: [id])
+  workerId   Int?
+  worker     Worker?       @relation(fields: [workerId], references: [id])
+}
+
+enum WorkerType {
+  LOCAL
+  REMOTE
+}
+
+enum WorkerStatus {
+  RUNNING
+  IDLE
+  ERROR
+  OFFLINE
+}
+
+enum DatasourceType {
+  GITHUB
+  LOCAL
+  S3
+}
+
+enum TaskParameterType {
+  ENUM
+  CUSTOM
+}
+
+enum UserType {
+  STRING
+  BOOL
+  INT
+  FLOAT
+  ARRAY
+  MAP
+}
+
+enum TaskRunStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}

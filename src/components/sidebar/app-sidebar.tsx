@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 import { datasources } from "@/mockData/datasources"
 import { ChevronRight, Settings } from "lucide-react"
-import { generatePath, NavLink } from "react-router"
+import Link from 'next/link'
 import { ProjectsSidebarGroup } from "./item/projects-item"
 import { NavUser } from "./nav-user"
 
@@ -54,9 +54,9 @@ export function AppSidebar() {
                                             {item.items?.map((subItem) => (
                                                 <SidebarMenuSubItem key={subItem.name}>
                                                     <SidebarMenuSubButton asChild>
-                                                        <NavLink to={generatePath(subItem.url)} >
+                                                        <Link href={`/${subItem.url}`} >
                                                             <span>{subItem.name}</span>
-                                                        </NavLink>
+                                                        </Link>
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
                                             ))}

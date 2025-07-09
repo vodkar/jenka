@@ -1,11 +1,11 @@
+'use client';
+
 
 import { MainHeader } from "@/components/sidebar/header";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Worker, WorkerStatuses, WorkerTypes } from "@/models/worker";
 import { CirclePlus, Cloud, Moon, Server, Shovel, Skull, Unplug } from "lucide-react";
-import type { Route } from "./+types/workers";
-
 const workers: Worker[] = [
     {
         id: 1,
@@ -90,7 +90,7 @@ const WORKER_TYPES_UI = new Map([
 ]
 )
 
-export default function WorkersPage({ }: Route.ComponentProps) {
+export default function WorkersPage() {
     return (
         <div>
             <MainHeader headerText="Workers" additionalElements={[
@@ -101,7 +101,7 @@ export default function WorkersPage({ }: Route.ComponentProps) {
             ]} />
             <div className="*:data-[slot=card]:shadow-xs px-4 gap-4 grid grid-cols-3 *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card">
                 {workers.map((worker) => (
-                    <Card id={worker.id.toString()} className="@container/card">
+                    <Card id={worker.id.toString()} key={worker.id} className="@container/card">
                         <CardHeader className="relative">
                             <CardDescription>
                                 <div className="flex items-center gap-2">

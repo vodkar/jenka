@@ -1,3 +1,4 @@
+
 import { LogViewerDialog } from "@/components/dialogs/log-viewer";
 import { RunTaskForm } from "@/components/dialogs/run-task";
 import { MainHeader } from "@/components/sidebar/header";
@@ -15,7 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Task, TaskRunStatus } from "@/models/task";
 import { CheckCircle, ChevronRight, FileText, Loader2, Play, XCircle } from "lucide-react";
-import type { Route } from "./+types/project";
+import { use } from "react";
 
 const STATUS_CONFIG = {
     running: {
@@ -190,14 +191,10 @@ const data: Task[] = [
     }
 ]
 
-export async function loader({ params }: Route.LoaderArgs) {
-    const { projectId } = params;
-    return { projectId }
-}
-
-
-
-export default function ProjectPage({ }: Route.ComponentProps) {
+export default function ProjectPage({ params }: {
+    params: Promise<{ slug: string }>
+}) {
+    const { slug } = use(params)
     return (
         <div>
             <MainHeader headerText="Projects" />

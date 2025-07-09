@@ -1,3 +1,5 @@
+'use client'
+
 import { SidebarGroupAction } from "@/components/ui/sidebar"
 import { Datasource } from "@/models/datasource"
 import { Project } from "@/models/project"
@@ -44,7 +46,7 @@ export function ProjectsSidebarGroup({ datasources }: ProjectsSidebarMenuItemPro
     return (
         <ExtendableSidebarGroup
             name="Project Tasks"
-            pathTemplate="projects/:id"
+            pathTemplate="/projects/"
             projects={projects}
             addButton={
                 <AddProjectForm

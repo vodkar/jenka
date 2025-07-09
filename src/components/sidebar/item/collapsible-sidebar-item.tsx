@@ -1,3 +1,5 @@
+'use client'
+
 import { SearchProjectsForm } from "@/components/search-form"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -7,8 +9,8 @@ import {
     SidebarMenuButton, SidebarMenuItem
 } from "@/components/ui/sidebar"
 import { Project } from "@/models/project"
+import Link from 'next/link'
 import { useEffect, useState } from "react"
-import { generatePath, NavLink } from "react-router"
 
 
 export interface CollapsibleSidebarItemProps {
@@ -39,9 +41,9 @@ export function ExtendableSidebarGroup({ name, projects, addButton, pathTemplate
                 {visibleProjects.map((item) => (
                     <SidebarMenuItem key={item.id} >
                         <SidebarMenuButton tooltip={item.name} className="cursor-pointer">
-                            <NavLink to={generatePath(pathTemplate, { id: item.id })} className="flex items-center gap-2">
+                            <Link href={`/projects/${item.id}`} className="flex items-center gap-2">
                                 <span>{item.name}</span>
-                            </NavLink>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 ))}
