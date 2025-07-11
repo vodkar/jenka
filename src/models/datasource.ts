@@ -4,7 +4,7 @@ export enum DatasourceTypes {
     S3 = "S3",
 }
 
-export interface AddDatasourceDTO {
+export interface CreateDatasourceDTO {
     name: string;
     description: string;
     type: DatasourceTypes;

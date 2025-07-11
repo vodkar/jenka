@@ -1,5 +1,8 @@
-import RootPage from "@/pages/root";
-
-export default function Page() {
-    return <RootPage />
+export default function RootPage() {
+    return (
+        <div >
+            <h1 className="text-2xl font-bold">Nothink hir</h1>
+            <p>but syn...</p>
+        </div>
+    )
 }

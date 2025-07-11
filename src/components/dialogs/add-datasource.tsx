@@ -1,6 +1,8 @@
 "use client"
 
+import { createDatasourceAction } from "@/actions/datasource";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,17 +20,19 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Datasource, DatasourceTypes } from "@/models/datasource";
 import { addDatasourceSchema } from "@/schema/zod/add-datasource";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Textarea } from "../ui/textarea";
 
 interface AddDatasourceFormProps {
     triggerElement: React.ReactNode;
     datasources: Datasource[];
-    setDatasources: (datasources: Datasource[]) => void;
+    onDatasourceCreated?: (datasource: Datasource) => void;
 }
 
-export function AddDatasourceForm({ triggerElement, datasources, setDatasources }: AddDatasourceFormProps) {
+export function AddDatasourceForm({ triggerElement, onDatasourceCreated }: AddDatasourceFormProps) {
+    const [open, setOpen] = useState(false);
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<z.infer<typeof addDatasourceSchema>>({
         resolver: zodResolver(addDatasourceSchema),
         defaultValues: {
@@ -36,25 +40,24 @@ export function AddDatasourceForm({ triggerElement, datasources, setDatasources 
             description: "",
             type: DatasourceTypes.LOCAL,
         },
-    })
+    });
 
-    function onSubmit(values: z.infer<typeof addDatasourceSchema>) {
-        const datasource = {
-            id: 3,
-            name: values.name,
-            description: values.description,
-            type: values.type,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            createdBy: "me",
-            updatedBy: "me",
-        };
-        setDatasources([...datasources, datasource]);
-        form.reset();
+    async function onSubmit(values: z.infer<typeof addDatasourceSchema>) {
+        startTransition(async () => {
+            const result = await createDatasourceAction(values);
+
+            if (result.success) {
+                form.reset();
+                setOpen(false);
+                onDatasourceCreated?.(result.data);
+            } else {
+                console.error('Failed to create datasource:', result.error);
+            }
+        });
     }
 
     return (
-        <Dialog >
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {triggerElement}
             </DialogTrigger>
@@ -127,9 +130,9 @@ export function AddDatasourceForm({ triggerElement, datasources, setDatasources 
                             )}
                         />
                         <DialogFooter>
-                            <DialogClose asChild>
-                                <Button type="submit">Create</Button>
-                            </DialogClose>
+                            <Button type="submit" disabled={isPending}>
+                                {isPending ? "Creating..." : "Create"}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>
