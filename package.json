@@ -9,7 +9,9 @@
     "start": "npx serve@latest ./build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "prisma:generate": "prisma generate",
+    "prisma:format": "prisma format"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

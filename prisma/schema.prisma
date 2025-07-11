@@ -57,6 +57,59 @@ model Datasource {
   updatedBy   String
 
   projects Project[]
+
+  localDatasource  LocalDatasource?
+  githubDatasource GithubDatasource?
+  s3Datasource     S3Datasource?
+}
+
+model LocalDatasource {
+  id           Int        @id @default(autoincrement())
+  path         String
+  datasourceId Int        @unique
+  datasource   Datasource @relation(fields: [datasourceId], references: [id], onDelete: Cascade)
+}
+
+model GithubDatasource {
+  id            Int               @id @default(autoincrement())
+  repository    String
+  branch        String
+  credentialsId Int
+  credentials   GithubCredentials @relation(fields: [credentialsId], references: [id])
+  datasourceId  Int               @unique
+  datasource    Datasource        @relation(fields: [datasourceId], references: [id], onDelete: Cascade)
+}
+
+model S3Datasource {
+  id            Int           @id @default(autoincrement())
+  bucketName    String
+  region        String
+  credentialsId Int
+  credentials   S3Credentials @relation(fields: [credentialsId], references: [id])
+  datasourceId  Int           @unique
+  datasource    Datasource    @relation(fields: [datasourceId], references: [id], onDelete: Cascade)
+}
+
+model GithubCredentials {
+  id        Int      @id @default(autoincrement())
+  token     String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  githubDatasources GithubDatasource[]
+}
+
+model S3Credentials {
+  id              Int      @id @default(autoincrement())
+  accessKeyId     String
+  secretAccessKey String
+  region          String
+  endpointUrl     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  s3Datasources S3Datasource[]
 }
 
 model Project {

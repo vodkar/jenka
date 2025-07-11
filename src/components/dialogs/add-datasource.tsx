@@ -2,7 +2,7 @@
 
 import { createDatasourceAction } from "@/actions/datasource";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,8 +39,35 @@ export function AddDatasourceForm({ triggerElement, onDatasourceCreated }: AddDa
             name: "",
             description: "",
             type: DatasourceTypes.LOCAL,
+            path: "",
+            repository: "",
+            branch: "",
+            credentialsId: 0,
+            bucketName: "",
+            region: "",
         },
     });
+
+    const selectedType = form.watch("type");
+
+    useEffect(() => {
+        if (selectedType === DatasourceTypes.LOCAL) {
+            form.setValue("repository", "");
+            form.setValue("branch", "");
+            form.setValue("credentialsId", 0);
+            form.setValue("bucketName", "");
+            form.setValue("region", "");
+        } else if (selectedType === DatasourceTypes.GITHUB) {
+            form.setValue("path", "");
+            form.setValue("bucketName", "");
+            form.setValue("region", "");
+        } else if (selectedType === DatasourceTypes.S3) {
+            form.setValue("path", "");
+            form.setValue("repository", "");
+            form.setValue("branch", "");
+        }
+        form.trigger();
+    }, [selectedType, form]);
 
     async function onSubmit(values: z.infer<typeof addDatasourceSchema>) {
         startTransition(async () => {
@@ -49,7 +76,9 @@ export function AddDatasourceForm({ triggerElement, onDatasourceCreated }: AddDa
             if (result.success) {
                 form.reset();
                 setOpen(false);
-                onDatasourceCreated?.(result.data);
+                if (result.data) {
+                    onDatasourceCreated?.(result.data);
+                }
             } else {
                 console.error('Failed to create datasource:', result.error);
             }
@@ -61,10 +90,10 @@ export function AddDatasourceForm({ triggerElement, onDatasourceCreated }: AddDa
             <DialogTrigger asChild>
                 {triggerElement}
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                 <DialogTitle>Add Datasource</DialogTitle>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
                             name="name"
@@ -129,6 +158,142 @@ export function AddDatasourceForm({ triggerElement, onDatasourceCreated }: AddDa
                                 </FormItem>
                             )}
                         />
+
+                        {selectedType === DatasourceTypes.LOCAL && (
+                            <FormField
+                                control={form.control}
+                                name="path"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Local Path</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="/path/to/your/project" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            The absolute path to the local directory containing your project files.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+
+                        {selectedType === DatasourceTypes.GITHUB && (
+                            <>
+                                <FormField
+                                    control={form.control}
+                                    name="repository"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Repository</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="owner/repo-name" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The GitHub repository in the format "owner/repository-name".
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="branch"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Branch</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="main" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The branch to use from the repository.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="credentialsId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>GitHub Credentials ID</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder="1"
+                                                    {...field}
+                                                    onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The ID of the stored GitHub credentials to use for authentication.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </>
+                        )}
+
+                        {selectedType === DatasourceTypes.S3 && (
+                            <>
+                                <FormField
+                                    control={form.control}
+                                    name="bucketName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>S3 Bucket Name</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="my-bucket-name" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The name of the S3 bucket containing your files.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="region"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>AWS Region</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="us-east-1" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The AWS region where your S3 bucket is located.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="credentialsId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>AWS Credentials ID</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    placeholder="1"
+                                                    {...field}
+                                                    onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                The ID of the stored AWS credentials to use for S3 access.
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </>
+                        )}
+
                         <DialogFooter>
                             <Button type="submit" disabled={isPending}>
                                 {isPending ? "Creating..." : "Create"}
